@@ -28,11 +28,12 @@ jobs:
         run: |
           docker run --rm myintegration/app:${{ github.sha }} npm test
 
-  # Деплой включается, когда в Secrets заданы DOCKERHUB_* и KUBE_CONFIG
+  # Деплой: задайте Secrets DOCKERHUB_USERNAME, DOCKERHUB_TOKEN, KUBE_CONFIG
+  # и запускайте workflow вручную (workflow_dispatch) либо раскомментируйте push-триггер ниже.
   deploy:
     needs: build-and-test
     runs-on: ubuntu-latest
-    if: ${{ secrets.DOCKERHUB_USERNAME != '' }}
+    if: github.event_name == 'workflow_dispatch'
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
